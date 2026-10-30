@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Donation Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo" href="index.html">❤️ BloodConnect</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="register_form.html">Become a Donor</a>
+      <a href="emergency.php">Emergency</a>
+      <a class="nav-link" href="index.php">Raise a Ticket</a>
+      <a href="admin.php">Admin</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Donate Blood, Save Lives</h1>
+    <p>Every drop counts. Your small act can give someone a lifetime.</p>
+    <a href="register_form.html" class="btn">Register as Donor</a>
+  </section>
+
+  <section class="importance">
+    <h2>Why Donate Blood?</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>🩸 Save Lives</h3>
+        <p>Each blood donation can save up to three lives. Your generosity helps patients in surgeries, trauma, and cancer treatment.</p>
+      </div>
+      <div class="card">
+        <h3>💪 Improve Your Health</h3>
+        <p>Regular blood donation stimulates red cell production and keeps your iron levels balanced.</p>
+      </div>
+      <div class="card">
+        <h3>🤝 Build a Better Community</h3>
+        <p>Donating blood strengthens the bond in your community and encourages others to do the same.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2>Myths & Facts About Blood Donation</h2>
+    <div class="faq-item">
+      <h4>Myth: Donating blood makes you weak.</h4>
+      <p><strong>Fact:</strong> Your body replaces the lost fluids within 24 hours, and red blood cells are replenished within weeks.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Myth: Only older people can donate blood.</h4>
+      <p><strong>Fact:</strong> Anyone between 18 and 65 years, who is healthy, can donate blood safely.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Myth: Blood donation is painful.</h4>
+      <p><strong>Fact:</strong> The only pain you feel is a quick needle prick — the process is safe and monitored by professionals.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 BloodConnect | Made with ❤️ to save lives</p>
+  </footer>
+
+  <div id="chat-widget">
+    <div id="chat-box">
+      <div id="chat-header">BloodConnect AI</div>
+      <div id="chat-messages"></div>
+      <div id="chat-input-area">
+        <input type="text" id="user-input" placeholder="Ask something...">
+        <button id="chat-send">Send</button>
+      </div>
+    </div>
+    <button id="chat-button">💬</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <script>
+    const chatButton = document.getElementById('chat-button');
+    const chatBox = document.getElementById('chat-box');
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const chatSend = document.getElementById('chat-send');
+
+    // Toggle chat window visibility panel
+    chatButton.addEventListener('click', () => {
+      chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Handle sending message transmission pipeline
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      // Append user dialog elements into the message stream cleanly
+      chatMessages.innerHTML += `<div class="msg-container user-container"><strong>You:</strong><p>${text}</p></div>`;
+      userInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Establish tracking identification wrapper for live thinking engine
+      const loadingId = Date.now();
+      chatMessages.innerHTML += `<div class="msg-container ai-container" id="${loadingId}"><em>AI is thinking...</em></div>`;
+
+      try {
+        // Targeted backend endpoint routing pipeline
+        const response = await fetch('/blood-donation/chatbot.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await response.json();
+        
+        // Remove active listening context placeholder safely
+        document.getElementById(loadingId).remove();
+        
+        // Convert plain markdown strings to parsed hierarchical HTML structures
+        const formattedResponse = marked.parse(data.response);
+        
+        // Render the structured semantic fragments cleanly inside separate bubble segments
+        chatMessages.innerHTML += `
+          <div class="msg-container ai-container">
+            <strong>AI:</strong>
+            <div class="markdown-body">${formattedResponse}</div>
+          </div>`;
+          
+      } catch (error) {
+        document.getElementById(loadingId).innerText = "Error connecting to AI.";
+        console.error(error);
+      }
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    chatSend.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+  </script>
+</body>
+</html>
